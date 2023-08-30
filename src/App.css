@@ -234,4 +234,7 @@ a.noti-mask-read {
   .noti-pic {
     position: relative;
   }
+  a.noti-mask-read {
+    font-size: 16px;
+}
 }
