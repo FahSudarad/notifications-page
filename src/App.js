@@ -1,16 +1,18 @@
-import markWebber from "./assets/images/avatar-mark-webber.webp";
-import angelaGray from "./assets/images/avatar-angela-gray.webp";
-import jacobThompson from "./assets/images/avatar-jacob-thompson.webp";
-import rizkyHasanuddin from "./assets/images/avatar-rizky-hasanuddin.webp";
-import kimberlySmith from "./assets/images/avatar-kimberly-smith.webp";
-import chess from "./assets/images/image-chess.webp";
-import nathanPeterson from "./assets/images/avatar-nathan-peterson.webp";
-import annaKim from "./assets/images/avatar-anna-kim.webp";
+import notifications from "./data/notifications";
 import dotNoti from "./assets/images/dot-noti.png";
 import "./App.css";
 import { useState } from "react";
 
 function App() {
+  const [notificationsState, setNotificationsState] = useState(notifications);
+
+  const markAllRead = () => {
+    const updatedNotifications = notificationsState.map((notification) => ({
+      ...notification,
+      status: false,
+    }));
+    setNotificationsState(updatedNotifications);
+  };
   return (
     <div className="App">
       <div className="noti-box">
@@ -18,141 +20,91 @@ function App() {
           <div className="noti-count-box">
             <div className="notifications">
               <h1>Notifications</h1>
-              <span className="noti-count">3</span>
-            </div>
-            <h3>Mark all as read</h3>
-          </div>
-
-          <div className="noti-bar-box">
-            <img className="profiles-pic" src={markWebber} alt="profile" />
-            <div className="noti-text">
-              <span>
-                <p className="account-name">Mark Webber</p>
-                <p className="text">reacted to your recent post</p>
-                <a href="#" className="noti-action">
-                  My first tournament today!
-                </a>
-                <img
-                  className="noti-dot"
-                  src={dotNoti}
-                  alt="notifications dot"
-                />
+              <span className="noti-count">
+                {
+                  notificationsState.filter((item) => item.status === true)
+                    .length
+                }
               </span>
-              <p className="noti-time">1m ago</p>
             </div>
+            <button onClick={markAllRead}>Mark all as read</button>
           </div>
 
-          <div className="noti-bar-box">
-            <img className="profiles-pic" src={angelaGray} alt="profile" />
-            <div className="noti-text">
-              <span>
-                <a href="#" className="noti-action">
-                  Angela Gray
-                </a>
-                <p className="text">followed you</p>
-                <img
-                  className="noti-dot"
-                  src={dotNoti}
-                  alt="notifications dot"
-                />
-              </span>
-              <p className="noti-time">5m ago</p>
-            </div>
-          </div>
-
-          <div className="noti-bar-box">
-            <img className="profiles-pic" src={jacobThompson} alt="profile" />
-            <div className="noti-text">
-              <span>
-                <p className="account-name">Jacob Thompson</p>
-                <p className="text">has joined your group</p>
-                <a href="#" className="noti-action">
-                  Chess Club
-                </a>
-                <img
-                  className="noti-dot"
-                  src={dotNoti}
-                  alt="notifications dot"
-                />
-              </span>
-              <p className="noti-time">1 day ago</p>
-            </div>
-          </div>
-
-          <div className="unactive-noti-bar">
-            <img className="profiles-pic" src={rizkyHasanuddin} alt="profile" />
-            <div className="noti-text">
-              <span>
-                <p className="account-name">Rizky Hasanuddin</p>
-                <p className="text">sent you a private message</p>
-                <img
-                  className="noti-dot"
-                  src={dotNoti}
-                  alt="notifications dot"
-                />
-              </span>
-              <p className="noti-time">5 days ago</p>
-              <div className="direct-dm">
-                <p>
-                  Hello, thanks for setting up the Chess Club. I've been a
-                  member for a few weeks now and I'm already having lots of fun
-                  and improving my game.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="unactive-noti-bar">
-            <div className="unactive-noti">
-              <img className="profiles-pic" src={kimberlySmith} alt="profile" />
-              <div className="noti-text">
-                <span>
-                  <p className="account-name">Kimberly Smith</p>
-                  <p className="text">commented on your picture</p>
-                </span>
-                <p className="noti-time">1 week ago</p>
-              </div>
-            </div>
-            <div className="noti-pic">
-              <img src={chess} alt="notitications-picture" />
-            </div>
-          </div>
-
-          <div className="unactive-noti-bar">
-            <div className="unactive-noti">
+          {/* Notification boxes */}
+          {notificationsState.map((item, index) => (
+            <div
+              key={index}
+              className={
+                item.status && item.dm === ""
+                  ? "noti-bar-box"
+                  : "unactive-noti-bar"
+              }
+              onClick={() => {
+                if (item.status) {
+                  const updatedNotifications = [...notificationsState];
+                  updatedNotifications[index].status = false;
+                  setNotificationsState(updatedNotifications);
+                }
+              }}
+            >
               <img
                 className="profiles-pic"
-                src={nathanPeterson}
-                alt="profile"
+                src={item.profilePic}
+                alt={"profile " + item.name}
               />
               <div className="noti-text">
                 <span>
-                  <p className="account-name">Nathan Peterson</p>
-                  <p className="text">reacted to your recent post</p>
-                  <a href="#" className="noti-mask-read">
-                    5 end-game strategies to increase your win rate
-                  </a>
-                </span>
-                <p className="noti-time">2 week ago</p>
-              </div>
-            </div>
-          </div>
+                  {item.activities === "followed" && item.status ? (
+                    <a href="#" className="noti-action">
+                      {item.name}
+                    </a>
+                  ) : (
+                    <p className="account-name">{item.name}</p>
+                  )}
+                  {item.activities === "joined group" && item.status ? (
+                    <a href="#" className="noti-action">
+                      {item.text}
+                    </a>
+                  ) : (
+                    <p className="text">{item.text}</p>
+                  )}
 
-          <div className="unactive-noti-bar">
-            <div className="unactive-noti">
-              <img className="profiles-pic" src={annaKim} alt="profile" />
-              <div className="noti-text">
-                <span>
-                  <p className="account-name">Anna Kim</p>
-                  <p className="text">left the group</p>
-                  <a href="#" className="noti-mask-read">
-                    Chess Club
+                  <a
+                    href="#"
+                    className={item.status ? "noti-action" : "noti-mask-read"}
+                  >
+                    {item.post}
                   </a>
+                  {item.status ? (
+                    <img
+                      className="noti-dot"
+                      src={dotNoti}
+                      alt="notifications dot"
+                    />
+                  ) : (
+                    <></>
+                  )}
                 </span>
-                <p className="noti-time">2 week ago</p>
+                <p className="noti-time">{item.time}</p>
+                {item.dm !== "" && item.status ? (
+                  <div className="direct-dm">
+                    <p>{item.dm}</p>
+                  </div>
+                ) : (
+                  <div className="direct-dm-readed">
+                    <p>{item.dm}</p>
+                  </div>
+                )}
               </div>
+              {item.imagePost !== "" ? (
+                <div className="noti-pic">
+                  <img src={item.imagePost} alt="notitications-picture" />
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

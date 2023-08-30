@@ -78,6 +78,7 @@ span.noti-count {
   padding: 22px;
   align-items: start;
   margin-top: 10px;
+  cursor: pointer;
 }
 
 .profiles-pic {
@@ -99,8 +100,13 @@ p.noti-time {
   margin-top: 5px;
 }
 
-.noti-count-box h3 {
+.noti-count-box button {
   color: hsl(219, 12%, 42%);
+  font-size: 22px;
+  font-weight: 800;
+  background-color: white;
+  border: none;
+  cursor: pointer;
 }
 
 img.noti-dot {
@@ -138,16 +144,26 @@ p.account-name {
   margin-top: 10px;
 }
 
+.direct-dm-readed {
+  display: none;
+}
+
 .unactive-noti-bar {
   padding: 22px;
   margin-top: 10px;
   align-items: start;
-  justify-content: space-between;
+  position: relative;
+  cursor: pointer;
 }
 
 .unactive-noti {
   display: flex;
   flex-direction: row;
+}
+
+.noti-pic {
+  position: absolute;
+  right: 0;
 }
 
 .noti-pic img {
@@ -159,6 +175,7 @@ a.noti-mask-read {
   color: hsl(219, 12%, 42%);
   font-weight: 800;
   text-decoration: none;
+  font-size: 20px;
 }
 
 .noti-text span {
@@ -211,5 +228,9 @@ a.noti-mask-read {
 
   .noti-box {
     border-radius: 0;
+  }
+
+  .noti-pic {
+    position: relative;
   }
 }
